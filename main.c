@@ -3,15 +3,17 @@
 
 int main()
 {
-    printf("Goodbye Old World!\n");
-    printf("Hello \'New One\'!\n");
-    printf("Reverse \\ slash is so slashy\n");
-    printf("what about \t some Tabulation\?\n");
-    //printf("Terminant is a weird \f \n \0 TERM");
-    printf("What is backspace\b\b \n");
-    int a = 50;
-    printf("%d\n", a);
-    printf("%05i\n", a);
-    printf("%.2f \n", 5.2135123);
+    int var = 70;
+    var = var + 50;
+    var  += 50;
+    printf("Variable is: %i\n", var);
+    var /= 2;
+    printf("Variable is: %i\n", var);
+    var /= 2;
+    printf("Variable is: %i\n", var);
+    int remainder = var % 5;
+    printf("Remainder is: %i\n", remainder);
+    remainder++;
+    printf("Incremented remainder is: %i\n", remainder);
     return 0;
 }
