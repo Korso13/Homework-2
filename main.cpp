@@ -60,14 +60,50 @@ void print(Student &s)
 uint16_t Student::studentCount = 0;
 
 //=========================================================================================================================
-//Task 2. Apples
+//Task 2. Fruits classes
 //=========================================================================================================================
 
-/*
-- Создать классы Apple (яблоко) и Banana (банан), которые наследуют класс Fruit (фрукт). 
-- У Fruit есть две переменные-члена: name (имя) и color (цвет). 
-- Добавить новый класс GrannySmith, который наследует класс Apple.
-*/
+class Fruit
+{
+protected:
+	std::string fName;
+	std::string fColour;
+public:
+	Fruit(std::string Colour, std::string Name) : fName(Name), fColour(Colour) {}
+	
+	std::string getName()
+	{
+		return fName;
+	}
+
+	std::string getColor()
+	{
+		return fColour;
+	}
+};
+
+class Apple : public Fruit
+{
+public:
+	Apple(std::string Colour = "green", std::string Name = "apple") : Fruit(Colour, Name) {}
+};
+
+class Banana : public Fruit
+{
+public:
+	Banana(std::string Colour = "yellow", std::string Name = "banana") : Fruit(Colour, Name) {}
+};
+
+class GrannySmith : public Apple
+{
+public:
+	GrannySmith(std::string Colour = "green", std::string Name = "Granny Smith apple") : Apple(Colour, Name) {}
+};
+
+//=========================================================================================================================
+//Task 3. Blackjack game code ideas
+//=========================================================================================================================
+
 
 
 
@@ -84,6 +120,8 @@ int main()
 		print(Jane);
 	}
 
+	std::cout << std::endl;
+
 	{
 		Apple a("red");
 		Banana b;
@@ -93,14 +131,6 @@ int main()
 		std::cout << "My " << b.getName() << " is " << b.getColor() << ".\n";
 		std::cout << "My " << c.getName() << " is " << c.getColor() << ".\n";
 	}
-	
-	/*
-	Код, приведенный выше, должен давать следующий результат:
-
-	My apple is red.
-	My banana is yellow.
-	My Granny Smith apple is green.
-	*/
 	
 	return 0;
 }
