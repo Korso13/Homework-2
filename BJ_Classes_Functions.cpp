@@ -25,6 +25,8 @@ void Hand::Add(Card* card)
 void Hand::Clear()
 {
 	m_hand.clear();
+	m_hand.resize(0);
+	m_hand.shrink_to_fit();
 }
 
 int Hand::GetValue() const
