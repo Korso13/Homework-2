@@ -1,138 +1,88 @@
 #include <iostream>
 #include <string>
+#include "BJ_Classes_Functions.h"
+using namespace std;
 
 //=========================================================================================================================
-//Task 1. Student class
+//Task 1. Template class Pair1 for similar data types
 //=========================================================================================================================
 
-class Person
-{
-protected:
-	std::string _name;
-	uint16_t _age;
-	std::string _gender;
-	uint16_t _weight;
-public:
-	Person(std::string name, uint16_t age, std::string gender, uint16_t weight) : _name(name), _age(age), _gender(gender), _weight(weight) {}
-	
-	void setName(std::string name)
-	{
-		_name = name;
-	}
-
-	void setAge(uint16_t age)
-	{
-		_age = age;
-	}
-
-	void setWeight(uint16_t weight)
-	{
-		_weight = weight;
-	}
-};
-
-class Student : public Person
+template <typename T>
+class Pair1
 {
 private:
-	static uint16_t studentCount;
-protected:
-	uint16_t _stYear;
-	friend void print(Student& s);
+	T m_num1;
+	T m_num2;
 public:
-	Student(std::string name, uint16_t age, std::string gender, uint16_t weight, uint16_t stYear = 1) : Person(name, age, gender, weight), _stYear(stYear) { std::cout << "Всего студентов: " << ++studentCount << std::endl; }
-
-	void setStudyYear(uint16_t year)
+	Pair1(T number1, T number2) : m_num1(number1), m_num2(number2) {};
+	T first() const
 	{
-		_stYear = year;
+		return m_num1;
 	}
 
-	void incYear()
+	T second() const
 	{
-		_stYear++;
+		return m_num2;
 	}
 };
 
-void print(Student &s)
-{
-	std::cout << s._name << "/" << s._gender << "/" << s._age << " лет/" << s._stYear << " год обучения" << std::endl;
-}
-
-uint16_t Student::studentCount = 0;
-
 //=========================================================================================================================
-//Task 2. Fruits classes
+//Task 2. Template class Pair for different data types
 //=========================================================================================================================
-
-class Fruit
+template <typename T1, typename T2>
+class Pair
 {
 protected:
-	std::string fName;
-	std::string fColour;
+	T1 m_num1;
+	T2 m_num2;
 public:
-	Fruit(std::string Colour, std::string Name) : fName(Name), fColour(Colour) {}
-	
-	std::string getName()
+	Pair(T1 number1, T2 number2) : m_num1(number1), m_num2(number2) {}
+	T1 first() const
 	{
-		return fName;
+		return m_num1;
 	}
 
-	std::string getColor()
+	T2 second() const
 	{
-		return fColour;
+		return m_num2;
 	}
-};
-
-class Apple : public Fruit
-{
-public:
-	Apple(std::string Colour = "green", std::string Name = "apple") : Fruit(Colour, Name) {}
-};
-
-class Banana : public Fruit
-{
-public:
-	Banana(std::string Colour = "yellow", std::string Name = "banana") : Fruit(Colour, Name) {}
-};
-
-class GrannySmith : public Apple
-{
-public:
-	GrannySmith(std::string Colour = "green", std::string Name = "Granny Smith apple") : Apple(Colour, Name) {}
 };
 
 //=========================================================================================================================
-//Task 3. Blackjack game code ideas
+//Task 3. 
 //=========================================================================================================================
 
+
+template <typename T2>
+class StringValuePair : public Pair<string, T2>
+{
+public:
+	StringValuePair(string value1, T2 value2) : Pair<string, T2>(value1, value2) {};
+};
+
+//=========================================================================================================================
+//Task 4. Creating class GenericPlayer
+//=========================================================================================================================
 /*
-	Игру Blackjack можно реализовать через инициализацию нескольких классов и последовательный вызов в main() дополнительных функций игровой логики, а также методов из этих классов.
-	При инициализации программы у игрока будет запрошены стартовые параметры: кол-во игроков людей, а также кол-во используемых колод. На основании этой информации будет инициализирован объект класса Decks, а так же массив состоящий из объектов дочерних классов класса Player.
-	Описания классов нужных для игры:
-	
-	Базовый класс Player будет иметь поля: 
-	- private поле hand ("рука" - массив с картами игрока или крупье)
-	- private поле chips (фишки доступные игроку или же "банк" в случае с крупье)
-	- public метод метод GetCard();, который будет обращаться к методу переданного по ссылке объекта класса Decks и возвращать значение полученной карты
-	- public метод ClearHand(); - метод для сброса руки.
-	- public метод CheckHand(); который возвращает сумму значений карт в "руке"
-	- public методы setChips(bet); и getChips(); для изменения кол-ва фишек при выигрыше\проигрыше, а также для возврата кол-ва имеющихся фишек.
-	
-	Дочерний класс Dealer основаный на Player будет иметь свой конструктор с специальной инициализацией поля chips. Объект класса Dealer будет инициализован в нулевом индексе массива игроков длинна которого будет равна кол-ву игроков указанному при запуске программы + 1.
-
-	Дочерний класс Human Player основаный на Player будет тоже иметь отдельный конструктор, а также несколько дополнительных методов и дополнительное поле:
-	- private поле bet (текущая ставка)
-	- public метод SetBet (установка ставки, а также очистка этого поля после выигрыша, проигрыша)
-	- public метод DoubleDown (удвоение ставки)
-	(возможно в конечном вар-те будут дополнительные методы для отражения особых случаев в правилах, например "страховки")
-
-	Базовый класс Decks имеет:
-	- private поле decks. Это будет динамический двумерный массив [n][52] инициализируемый конструктором и уничтожаемый деструктором. n - равен указанному кол-ву используемых колод. 
-	- private метод ResetDeck(i); который сбрасывает колоду i
-	- public метод ResetAllDecks; который вызывает метод ResetDeck через цикл n раз и сбрасывает все колоды.
-	- public метод DrawCard(); который по вызову от объекта класса Player (а точнее его дочерних классов) будет извлекать из поля decks карту по случайным "координатам" предварительно проверив не равна ли ячейка 0. Обнуляет успешно выбранную ячейку.
-
-	В конце партии("шаффла"), проводится проверка полей chips у игроков и крупье (чтобы понять может ли игра продолжаться) а также выводится запрос игрокам, хотят ли они продолжать играть. При удовлетворении всех условий, игровой процесс рестартуется для нового шаффла (при необходимости вызывается метод Decks.ResetAllDecks(); )
+Согласно иерархии классов, которая представлена в методичке к уроку 3, от класса Hand наследует класс GenericPlayer, 
+который обобщенно представляет игрока, ведь у нас будет два типа игроков - человек и компьютер.
+• Создать класс GenericPlayer, в который добавить поле name - имя игрока.
+Также добавить 3 метода:
+• IsHitting() - чисто виртуальная функция, возвращает информацию, нужна ли игроку еще одна карта.
+• IsBoosted() - возвращает bool значение, есть ли у игрока перебор
+• Bust() - выводит на экран имя игрока и объявляет, что у него перебор.
 */
+
+class Hand {};
+
+class GenericPlayer : public virtual Hand
+{
+protected:
+	string m_name;
+public:
+	GenericPlayer(string name, )
+};
+
 
 
 int main()
@@ -140,25 +90,39 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	
 	{
-		Student Jon("Jon", 18, "male", 80, 1);
-		print(Jon);
-		Student Mac("Mac", 19, "male", 90, 1);
-		print(Mac);
-		Student Jane("Jane", 20, "female", 70, 2);
-		print(Jane);
-	}
+		/*
+		должен производить результат:
+		Pair: 6 9
+		Pair: 3.4 7.8
+		*/
+		Pair1<int> p1(6, 9);
+		cout << "Pair: " << p1.first() << ' ' << p1.second() << '\n';
 
-	std::cout << std::endl;
-
-	{
-		Apple a("red");
-		Banana b;
-		GrannySmith c;
-
-		std::cout << "My " << a.getName() << " is " << a.getColor() << ".\n";
-		std::cout << "My " << b.getName() << " is " << b.getColor() << ".\n";
-		std::cout << "My " << c.getName() << " is " << c.getColor() << ".\n";
+		const Pair1<double> p2(3.4, 7.8);
+		cout << "Pair: " << p2.first() << ' ' << p2.second() << '\n';
 	}
 	
+	{
+		/*
+		должен производить следующий результат:
+		Pair: 6 7.8
+		Pair: 3.4 5
+		*/
+		Pair<int, double> p1(6, 7.8);
+		cout << "Pair: " << p1.first() << ' ' << p1.second() << '\n';
+
+		const Pair<double, int> p2(3.4, 5);
+		cout << "Pair: " << p2.first() << ' ' << p2.second() << '\n';
+	}
+
+	{
+		/*
+		должен производить следующий результат:
+		Pair: Amazing 7
+		*/
+		StringValuePair<int> svp("Amazing", 7);
+		std::cout << "Pair: " << svp.first() << ' ' << svp.second() << '\n';
+	}
+
 	return 0;
 }
