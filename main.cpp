@@ -49,9 +49,8 @@ public:
 };
 
 //=========================================================================================================================
-//Task 3. 
+//Task 3. StringValuePair class for string and random type input
 //=========================================================================================================================
-
 
 template <typename T2>
 class StringValuePair : public Pair<string, T2>
@@ -63,24 +62,29 @@ public:
 //=========================================================================================================================
 //Task 4. Creating class GenericPlayer
 //=========================================================================================================================
-/*
-—огласно иерархии классов, котора€ представлена в методичке к уроку 3, от класса Hand наследует класс GenericPlayer, 
-который обобщенно представл€ет игрока, ведь у нас будет два типа игроков - человек и компьютер.
-Х —оздать класс GenericPlayer, в который добавить поле name - им€ игрока.
-“акже добавить 3 метода:
-Х IsHitting() - чисто виртуальна€ функци€, возвращает информацию, нужна ли игроку еще одна карта.
-Х IsBoosted() - возвращает bool значение, есть ли у игрока перебор
-Х Bust() - выводит на экран им€ игрока и объ€вл€ет, что у него перебор.
-*/
 
-class Hand {};
-
-class GenericPlayer : public virtual Hand
+class GenericPlayer : public Hand
 {
 protected:
 	string m_name;
 public:
-	GenericPlayer(string name, )
+	GenericPlayer(string name) : Hand(), m_name(name) {}
+	virtual ~GenericPlayer() {}
+	
+	virtual bool IsHitting() = 0;
+	
+	bool IsBoosted() const
+	{
+		if (GetValue() > 21)
+			return true;
+		else
+			return false;
+	};
+
+	void Bust() const
+	{
+		std::cout << "” игрока " << m_name << " перебор!" << std::endl;
+	};
 };
 
 
@@ -123,6 +127,7 @@ int main()
 		StringValuePair<int> svp("Amazing", 7);
 		std::cout << "Pair: " << svp.first() << ' ' << svp.second() << '\n';
 	}
+
 
 	return 0;
 }

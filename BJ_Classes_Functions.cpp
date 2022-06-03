@@ -1,67 +1,50 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "BJ_Classes_Functions.h"
 
-enum Ranks { two = 2, three = 3, four = 4, five = 5, six = 6, seven = 7, eight = 8, nine = 9, ten = 10, jack = 10, queen = 10, king = 10, ace = 1 };
-enum Suits { spades, clubs, diamonds, hearts };
+//Card class methods:
 
-class Card
+void Card::Flip()
 {
-protected:
-	Ranks m_value;
-	Suits m_suit;
-	bool m_faceUp{ 0 }; //0 - рубашкой кверху, 1 - в открытую
-public:
-	Card(Ranks value, Suits suit, bool faceUp = 0) : m_value(value), m_suit(suit), m_faceUp(faceUp) {}
+	m_faceUp = !m_faceUp;
+}
 
-	void Flip()
-	{
-		m_faceUp = !m_faceUp;
-	}
-
-	Ranks GetValue() const
-	{
-		return m_value;
-	}
-};
-
-class Hand
+Ranks Card::GetValue() const
 {
-protected:
-	std::vector<Card*> m_hand;
-public:
-	Hand() {}
-	virtual ~Hand() {}
+	return m_value;
+}
 
-	void Add(Card* card)
-	{
-		m_hand.push_back(card);
-	}
+//Hand class methods:
 
-	void Clear()
-	{
-		m_hand.clear();
-	}
+void Hand::Add(Card* card)
+{
+	m_hand.push_back(card);
+}
 
-	int GetValue() const
+void Hand::Clear()
+{
+	m_hand.clear();
+}
+
+int Hand::GetValue() const
+{
+	int sum{ 0 };
+	int aces{ 0 };
+	for (size_t i = 0; i < m_hand.size(); i++)
 	{
-		int sum{ 0 };
-		int aces{ 0 };
-		for (size_t i = 0; i < m_hand.size(); i++)
+		if (m_hand[i]->GetValue() == ace)
 		{
-			if (m_hand[i]->GetValue() == ace)
-			{
-				sum += 11;
-				aces++;
-			}
-			else
-				sum += m_hand[i]->GetValue();
+			sum += 11;
+			aces++;
 		}
-
-		//if total value exceeds 21 we remove extra 10 points per ace reducing it from 11 to 1. This way aces work even if drawn from index 0 and value exceeds 21 later on
-		if (sum > 21 && aces > 0)
-			sum = sum - (aces * 10);
-
-		return sum;
+		else
+			sum += m_hand[i]->GetValue();
 	}
-};
+
+	//if total value exceeds 21 we remove extra 10 points per ace reducing it from 11 to 1. This way aces work even if drawn from index 0 and value exceeds 21 later on
+	if (sum > 21 && aces > 0)
+		sum = sum - (aces * 10);
+
+	return sum;
+}
